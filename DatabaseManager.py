@@ -57,8 +57,3 @@ class DatabaseManager:
             print(result)
         except Exception as e:
             print('Something went wrong while getting reference times:', e)
-
-
-db = DatabaseManager()
-db.add_pc_to_db('Michel\'s pc')
-db.get_reference_times()
