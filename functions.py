@@ -11,7 +11,7 @@ def copy_matrix(dim, vectorized=False):
     if vectorized:
 
         # Vectorized Copy
-        # ----------------
+
         a = np.random.rand(dim, dim, 3)
 
         start = clock()
@@ -21,11 +21,12 @@ def copy_matrix(dim, vectorized=False):
 
         finish = clock()
         print('Time for vectorized copy: ', finish - start, 's')
+        return finish - start
 
     else:
 
         # Copy with loop
-        # ----------------
+
         a = np.random.rand(dim, dim, 3)
 
         start = clock()
@@ -37,6 +38,7 @@ def copy_matrix(dim, vectorized=False):
 
         finish = clock()
         print('Time for copy with loops: ', finish - start, 's')
+        return finish - start
 
 
 def mat_mult(dim1, dim2, dim3):
@@ -48,14 +50,12 @@ def mat_mult(dim1, dim2, dim3):
     c = np.dot(a, b)
 
     finish = clock()
-    print('Time for', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), 'b' + str(np.shape(b)), 'is', finish - start,
+    print('Time to calculate', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), '*', 'b' + str(np.shape(b)), 'is', finish - start,
           's')
+    return finish - start
 
 
 def n_queens():
-    # Python program to solve N Queen
-    # Problem using backtracking
-
     N = 5000
 
     # A utility function to check if a queen can
@@ -135,6 +135,7 @@ def n_queens():
     finish = clock()
 
     print('Time to solve the N Queen problem is', finish - start, 's')
+    return finish - start
 
 
 def xml_parsing():
@@ -198,11 +199,13 @@ def xml_parsing():
 
     start = clock()
 
-    parser.parse("movies.xml")
+    for i in range(100):
+        parser.parse("movies.xml")
 
     finish = clock()
 
     print('Time to parse the movies.xml file is', finish - start, 's')
+    return finish - start
 
 
 def bank_simulation():
@@ -257,11 +260,12 @@ def bank_simulation():
     finish = clock()
 
     print('Time to run the Bank Simulation is', finish - start, 's')
+    return finish - start
 
 
 def blurr_video():
     def blur(image):
-        """ Returns a blurred (radius=2 pixels) version of the image """
+        """ Returns a blurred version of the image """
         return gaussian(image.astype(float), sigma=2)
 
     start = clock()
@@ -270,19 +274,12 @@ def blurr_video():
     clip_blurred.write_videofile("blurred_weeee.mp4")
     finish = clock()
     print('Time to blur the video is', finish - start, 's')
+    return finish - start
 
 
-if __name__ == "__main__":
-    #   ./functions.py
-
-    copy_matrix(1000)
-    # print('\n')
-    # copy_matrix(5000, True)
-    # print('\n')
-    # mat_mult(1000, 1000, 1000)
-    # print('\n')
-    # n_queens()
-    # print('\n')
-    # xml_parsing()
-    # bank_simulation()
-    # blurr_video()
+def get_ordered_runtimes():
+    function_run_times = [copy_matrix(1000), copy_matrix(5000, True), mat_mult(5000, 5000, 5000), n_queens(),
+                          xml_parsing(), bank_simulation(), blurr_video()]
+    for i in range(len(function_run_times)):
+        function_run_times[i] = round(function_run_times[i], 5)
+    return function_run_times

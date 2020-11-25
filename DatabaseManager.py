@@ -33,7 +33,7 @@ class DatabaseManager:
                                                                 "`SPEC_RATIO`) VALUES (%s,%s,%s,%s) "
                 cursor.execute(statement, (pc_id, benchmark_id, exec_time, spec_ratio))
             self.connection.commit()
-            print("Benchmark was successfully added to the database.")
+            print("Benchmark %d 's result was successfully added to the database." % benchmark_id)
         except Exception as e:
             print('Something went wrong while adding benchmark result to the database:', e)
 
@@ -54,6 +54,6 @@ class DatabaseManager:
                 statement = "SELECT `benchmark_id`, `execution_time` FROM " + PC_RESULTS_TABLE + " WHERE `pc_id`=1"
                 cursor.execute(statement)
                 result = cursor.fetchall()
-            print(result)
+            return result
         except Exception as e:
             print('Something went wrong while getting reference times:', e)
