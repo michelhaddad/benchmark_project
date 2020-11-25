@@ -1,12 +1,11 @@
 from time import *
 from numpy import *
-import numpy as np
 import xml.sax
+import simpy
+import random
 
 
-
-def copy_matrix(dim, vectorized = False):
-
+def copy_matrix(dim, vectorized=False):
     if (vectorized):
 
         # Vectorized Copy
@@ -39,7 +38,6 @@ def copy_matrix(dim, vectorized = False):
 
 
 def mat_mult(dim1, dim2, dim3):
-
     a = random.rand(dim1, dim2)
     b = random.rand(dim2, dim3)
 
@@ -48,7 +46,7 @@ def mat_mult(dim1, dim2, dim3):
     c = dot(a, b)
 
     finish = clock()
-    print('Time for', 'c'+str(shape(c)), '=', 'a'+str(shape(a)), 'b'+str(shape(b)), 'is', finish - start, 's')
+    print('Time for', 'c' + str(shape(c)), '=', 'a' + str(shape(a)), 'b' + str(shape(b)), 'is', finish - start, 's')
 
 
 def n_queens():
@@ -119,13 +117,12 @@ def n_queens():
     # solutions, this function prints one of the
     # feasible solutions.
     def solve_nq():
-        board = [[0]*5000]*5000
+        board = [[0] * 5000] * 5000
 
         if solve_nq_util(board, 0) == False:
             return False
 
         return True
-
 
     # driver program to test above function
 
@@ -139,7 +136,6 @@ def n_queens():
 
 
 def xml_parsing():
-
     class MovieHandler(xml.sax.ContentHandler):
         def __init__(self):
             self.CurrentData = ""
@@ -189,7 +185,6 @@ def xml_parsing():
             elif self.CurrentData == "description":
                 self.description = content
 
-
     parser = xml.sax.make_parser()
 
     # turn off namepsaces
@@ -198,7 +193,6 @@ def xml_parsing():
     # override the default ContextHandler
     Handler = MovieHandler()
     parser.setContentHandler(Handler)
-
 
     start = clock()
 
@@ -209,18 +203,73 @@ def xml_parsing():
     print('Time to parse the movies.xml file is', finish - start, 's')
 
 
+def bank_simulation():
+    RANDOM_SEED = 42
+    NEW_CUSTOMERS = 300000  # Total number of customers
+    INTERVAL_CUSTOMERS = 10.0  # Generate new customers roughly every x seconds
+    MIN_PATIENCE = 60  # Min. customer patience
+    MAX_PATIENCE = 300  # Max. customer patience
+
+    def source(env, number, interval, counter):
+        """Source generates customers randomly"""
+        for i in range(number):
+            c = customer(env, 'Customer%02d' % i, counter, time_in_bank=12.0)
+            env.process(c)
+            t = random.expovariate(1.0 / interval)
+            yield env.timeout(t)
+
+    def customer(env, name, counter, time_in_bank):
+        """Customer arrives, is served and leaves."""
+        arrive = env.now
+        # print('%7.4f %s: Here I am' % (arrive, name))
+
+        with counter.request() as req:
+            patience = random.uniform(MIN_PATIENCE, MAX_PATIENCE)
+            # Wait for the counter or abort at the end of our tether
+            results = yield req | env.timeout(patience)
+
+            wait = env.now - arrive
+
+            if req in results:
+                # We got to the counter
+                # print('%7.4f %s: Waited %6.3f' % (env.now, name, wait))
+
+                tib = random.expovariate(1.0 / time_in_bank)
+                yield env.timeout(tib)
+                # print('%7.4f %s: Finished' % (env.now, name))
+
+            else:
+                pass
+                # We reneged
+                # print('%7.4f %s: RENEGED after %6.3f' % (env.now, name, wait))
+
+    # Setup and start the simulation
+    random.seed(RANDOM_SEED)
+    env = simpy.Environment()
+
+    # Start processes and run
+    counter = simpy.Resource(env, capacity=1)
+    env.process(source(env, NEW_CUSTOMERS, INTERVAL_CUSTOMERS, counter))
+    start = clock()
+    env.run()
+    finish = clock()
+
+    print('Time to solve the Bank Simulation problem is', finish - start, 's')
+
+
+
 
 if __name__ == "__main__":
-
     #   ./functions.py
 
-    copy_matrix(1000)
-    print('\n')
-    copy_matrix(5000, True)
-    print('\n')
-    # mat_mult(1000, 1000, 1000)
-    print('\n')
-    # n_queens()
-    print('\n')
-    xml_parsing()
+    # copy_matrix(1000)
+    # print('\n')
+    # copy_matrix(5000, True)
+    # print('\n')
+    # # mat_mult(1000, 1000, 1000)
+    # print('\n')
+    # # n_queens()
+    # print('\n')
+    # xml_parsing()
+    bank_simulation()
 
