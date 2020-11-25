@@ -1,6 +1,5 @@
 PyMySQL~=0.10.1
 numpy~=1.19.1
 simpy~=4.0.1
-ffmpy~=0.2.3
 scikit-image~=0.17.2
 moviepy~=1.0.3

@@ -3,6 +3,7 @@ import numpy as np
 import xml.sax
 import simpy
 import random
+import time
 from skimage.filters import gaussian
 from moviepy.editor import VideoFileClip
 
@@ -14,12 +15,12 @@ def copy_matrix(dim, vectorized=False):
 
         a = np.random.rand(dim, dim, 3)
 
-        start = clock()
+        start = time.time()
         a[:, :, 0] = a[:, :, 1]
         a[:, :, 2] = a[:, :, 0]
         a[:, :, 1] = a[:, :, 2]
 
-        finish = clock()
+        finish = time.time()
         print('Time for vectorized copy: ', finish - start, 's')
         return finish - start
 
@@ -29,14 +30,14 @@ def copy_matrix(dim, vectorized=False):
 
         a = np.random.rand(dim, dim, 3)
 
-        start = clock()
+        start = time.time()
         for i in range(dim):
             for j in range(dim):
                 a[i, j, 0] = a[i, j, 1]
                 a[i, j, 2] = a[i, j, 0]
                 a[i, j, 1] = a[i, j, 2]
 
-        finish = clock()
+        finish = time.time()
         print('Time for copy with loops: ', finish - start, 's')
         return finish - start
 
@@ -45,11 +46,11 @@ def mat_mult(dim1, dim2, dim3):
     a = np.random.rand(dim1, dim2)
     b = np.random.rand(dim2, dim3)
 
-    start = clock()
+    start = time.time()
 
     c = np.dot(a, b)
 
-    finish = clock()
+    finish = time.time()
     print('Time to calculate', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), '*', 'b' + str(np.shape(b)), 'is', finish - start,
           's')
     return finish - start
@@ -128,11 +129,11 @@ def n_queens():
 
     # driver program to test above function
 
-    start = clock()
+    start = time.time()
 
     solve_nq()
 
-    finish = clock()
+    finish = time.time()
 
     print('Time to solve the N Queen problem is', finish - start, 's')
     return finish - start
@@ -197,12 +198,12 @@ def xml_parsing():
     Handler = MovieHandler()
     parser.setContentHandler(Handler)
 
-    start = clock()
+    start = time.time()
 
     for i in range(100):
         parser.parse("movies.xml")
 
-    finish = clock()
+    finish = time.time()
 
     print('Time to parse the movies.xml file is', finish - start, 's')
     return finish - start
@@ -255,9 +256,9 @@ def bank_simulation():
     # Start processes and run
     counter = simpy.Resource(env, capacity=1)
     env.process(source(env, NEW_CUSTOMERS, INTERVAL_CUSTOMERS, counter))
-    start = clock()
+    start = time.time()
     env.run()
-    finish = clock()
+    finish = time.time()
 
     print('Time to run the Bank Simulation is', finish - start, 's')
     return finish - start
@@ -268,11 +269,11 @@ def blurr_video():
         """ Returns a blurred version of the image """
         return gaussian(image.astype(float), sigma=2)
 
-    start = clock()
+    start = time.time()
     clip = VideoFileClip("wee.mp4")
     clip_blurred = clip.fl_image(blur)
     clip_blurred.write_videofile("blurred_weeee.mp4")
-    finish = clock()
+    finish = time.time()
     print('Time to blur the video is', finish - start, 's')
     return finish - start
 
