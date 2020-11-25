@@ -1,16 +1,18 @@
 from time import *
-from numpy import *
+import numpy as np
 import xml.sax
 import simpy
 import random
+from skimage.filters import gaussian
+from moviepy.editor import VideoFileClip
 
 
 def copy_matrix(dim, vectorized=False):
-    if (vectorized):
+    if vectorized:
 
         # Vectorized Copy
         # ----------------
-        a = random.rand(dim, dim, 3)
+        a = np.random.rand(dim, dim, 3)
 
         start = clock()
         a[:, :, 0] = a[:, :, 1]
@@ -24,7 +26,7 @@ def copy_matrix(dim, vectorized=False):
 
         # Copy with loop
         # ----------------
-        a = random.rand(dim, dim, 3)
+        a = np.random.rand(dim, dim, 3)
 
         start = clock()
         for i in range(dim):
@@ -38,22 +40,22 @@ def copy_matrix(dim, vectorized=False):
 
 
 def mat_mult(dim1, dim2, dim3):
-    a = random.rand(dim1, dim2)
-    b = random.rand(dim2, dim3)
+    a = np.random.rand(dim1, dim2)
+    b = np.random.rand(dim2, dim3)
 
     start = clock()
 
-    c = dot(a, b)
+    c = np.dot(a, b)
 
     finish = clock()
-    print('Time for', 'c' + str(shape(c)), '=', 'a' + str(shape(a)), 'b' + str(shape(b)), 'is', finish - start, 's')
+    print('Time for', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), 'b' + str(np.shape(b)), 'is', finish - start,
+          's')
 
 
 def n_queens():
     # Python program to solve N Queen
     # Problem using backtracking
 
-    global N
     N = 5000
 
     # A utility function to check if a queen can
@@ -96,7 +98,7 @@ def n_queens():
                 board[i][col] = 1
 
                 # recur to place rest of the queens
-                if solve_nq_util(board, col + 1) == True:
+                if solve_nq_util(board, col + 1):
                     return True
 
                 # If placing queen in board[i][col
@@ -119,7 +121,7 @@ def n_queens():
     def solve_nq():
         board = [[0] * 5000] * 5000
 
-        if solve_nq_util(board, 0) == False:
+        if not solve_nq_util(board, 0):
             return False
 
         return True
@@ -155,7 +157,7 @@ def xml_parsing():
                 print("Title:", title)
 
         # Call when an elements ends
-        def end_element(self, tag):
+        def end_element(self):
             if self.CurrentData == "type":
                 print("Type:", self.type)
             elif self.CurrentData == "format":
@@ -254,22 +256,33 @@ def bank_simulation():
     env.run()
     finish = clock()
 
-    print('Time to solve the Bank Simulation problem is', finish - start, 's')
+    print('Time to run the Bank Simulation is', finish - start, 's')
 
 
+def blurr_video():
+    def blur(image):
+        """ Returns a blurred (radius=2 pixels) version of the image """
+        return gaussian(image.astype(float), sigma=2)
+
+    start = clock()
+    clip = VideoFileClip("wee.mp4")
+    clip_blurred = clip.fl_image(blur)
+    clip_blurred.write_videofile("blurred_weeee.mp4")
+    finish = clock()
+    print('Time to blur the video is', finish - start, 's')
 
 
 if __name__ == "__main__":
     #   ./functions.py
 
-    # copy_matrix(1000)
+    copy_matrix(1000)
     # print('\n')
     # copy_matrix(5000, True)
     # print('\n')
-    # # mat_mult(1000, 1000, 1000)
+    # mat_mult(1000, 1000, 1000)
     # print('\n')
-    # # n_queens()
+    # n_queens()
     # print('\n')
     # xml_parsing()
-    bank_simulation()
-
+    # bank_simulation()
+    # blurr_video()
