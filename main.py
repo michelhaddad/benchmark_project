@@ -40,3 +40,8 @@ for i in range(1, 8):
 # # Update the average spec ratio of the pc in the pc table
 geometric_avg_spec_ratio = avg_spec_ratio(spec_ratios)
 db.update_avg_spec_ratio(pc_id, geometric_avg_spec_ratio)
+
+# Display avg spec ratio and ranking of pc
+pc_results = db.get_pc_ranking(pc_id)
+print("You ranked %s out of %s pcs with a SPEC RATIO of %s!"
+      % (pc_results['rank'], db.get_total_pc_count(), pc_results['avg']))
