@@ -20,7 +20,6 @@ class DatabaseManager:
                 statement = "INSERT INTO " + PC_TABLE + " (`name`) VALUES (%s)"
                 cursor.execute(statement, pc_name)
             self.connection.commit()
-            print(pc_name + " was successfully added to the database with and id of " + str(cursor.lastrowid))
             return cursor.lastrowid
         except Exception as e:
             print('Something went wrong while adding pc to the database:', e)
@@ -33,7 +32,6 @@ class DatabaseManager:
                                                                 "`SPEC_RATIO`) VALUES (%s,%s,%s,%s) "
                 cursor.execute(statement, (pc_id, benchmark_id, exec_time, spec_ratio))
             self.connection.commit()
-            print("Benchmark %d 's result was successfully added to the database." % benchmark_id)
         except Exception as e:
             print('Something went wrong while adding benchmark result to the database:', e)
 
@@ -44,7 +42,6 @@ class DatabaseManager:
                 statement = "UPDATE " + PC_TABLE + " SET `AVG_SPEC_RATIO` = %s WHERE `id` = %s"
                 cursor.execute(statement, (ratio, pc_id))
             self.connection.commit()
-            print("Average Spec Ratio was successfully updated.")
         except Exception as e:
             print('Something went wrong while updating average spec ratio:', e)
 

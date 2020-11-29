@@ -7,6 +7,9 @@ import time
 from skimage.filters import gaussian
 from moviepy.editor import VideoFileClip
 
+# Set the seed to apply same operations on all tests
+np.random.seed(10)
+
 
 def copy_matrix(dim, vectorized=False):
     if vectorized:
@@ -51,8 +54,8 @@ def mat_mult(dim1, dim2, dim3):
     c = np.dot(a, b)
 
     finish = time.time()
-    print('Time to calculate', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), '*', 'b' + str(np.shape(b)), 'is', finish - start,
-          's')
+    print('Time to calculate', 'c' + str(np.shape(c)), '=', 'a' + str(np.shape(a)), '*', 'b' + str(np.shape(b)), 'is',
+          finish - start, 's')
     return finish - start
 
 
@@ -272,7 +275,7 @@ def blurr_video():
     start = time.time()
     clip = VideoFileClip("wee.mp4")
     clip_blurred = clip.fl_image(blur)
-    clip_blurred.write_videofile("blurred_weeee.mp4")
+    clip_blurred.write_videofile("blurred_weeee.mp4", temp_audiofile="")
     finish = time.time()
     print('Time to blur the video is', finish - start, 's')
     return finish - start

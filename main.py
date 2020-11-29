@@ -21,6 +21,7 @@ db = DatabaseManager()
 pc_id = db.add_pc_to_db(pc_name)
 
 # Get the runtime for each benchmark (benchmarks are sorted by their id in the database)
+print("The benchmarks are running, please wait...")
 ordered_runtimes = get_ordered_runtimes()
 
 # Get the reference runtime for each benchmark
@@ -41,7 +42,14 @@ for i in range(1, 8):
 geometric_avg_spec_ratio = avg_spec_ratio(spec_ratios)
 db.update_avg_spec_ratio(pc_id, geometric_avg_spec_ratio)
 
+# Display comparison with reference pc
+print("\n\nThis is how you compared to the reference pc (Lenovo ideapad 320 15IKB): \n"
+      "Note: Speed results, called a \"SPEC ratio,\" are expressed as the ratio of time required to"
+      " execute the benchmark compared to a reference time which is the execution time on a reference pc.\n")
+for i in range(7):
+    print(ORDERED_BENCHMARK_NAMES[i] + ": Your SPEC ratio --> %f" % (spec_ratios[i]))
+
 # Display avg spec ratio and ranking of pc
 pc_results = db.get_pc_ranking(pc_id)
-print("You ranked %s out of %s pcs with a SPEC RATIO of %s!"
+print("\n\nYou ranked %d out of %s pcs with a SPEC RATIO of %s!"
       % (pc_results['rank'], db.get_total_pc_count(), pc_results['avg']))
