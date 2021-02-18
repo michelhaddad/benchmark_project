@@ -1,3 +1,7 @@
+<h1 style="color:red;">Important Notice</h1>
+
+Please note that the project is no longer connected to the database containing all the PC rankings.  
+
 ## Requirements
 
 1. You will need python (preferrably version 3.3 or above)
